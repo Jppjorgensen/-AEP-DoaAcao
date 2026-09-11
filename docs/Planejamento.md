@@ -1,119 +1,91 @@
-# DoaAção — Planejamento da AEP
+# DoaAção — Documento de Arquitetura e Requisitos
 
-## 1. Identificação e proposta
+AEP — 4º semestre — 2026.2
 
-Projeto: DoaAção — Sistema de Gestão de Doações. AEP do 4º semestre, 2026.2.
+Instituição: Unicesumar   |   Curso: Engenharia de Software
 
-Instituição: [PREENCHER] | Curso: [ADS ou Engenharia de Software] | Turma: [PREENCHER] | Professor: [PREENCHER].
+Turma: esoft4sm   |   Período: 4º semestre — 2026.2
 
-Integrantes e RAs: [Integrante 1 / RA]; [Integrante 2 / RA]; [Integrante 3 / RA, se houver].
+## 1. DESCOBERTA E CONCEPÇÃO (O PROBLEMA E A ODS)
 
-Organizações e grupos solidários podem receber doações por diferentes canais e depender de anotações dispersas. Isso dificulta localizar o que foi recebido, identificar a instituição destinatária e acompanhar o que já foi entregue. Esta é uma hipótese de problema para o projeto acadêmico; não se apresenta entrevista ou pesquisa de campo como realizada.
+Grupos solidários podem receber doações por diferentes canais e depender de anotações dispersas. Isso dificulta identificar os itens recebidos, a instituição destinatária e o que já foi entregue. O DoaAção propõe centralizar esses registros em uma aplicação local, utilizada pelo voluntário responsável pela organização das doações.
 
-O sistema proposto centraliza o registro de doações de alimentos e produtos de higiene, seus itens e sua situação. O usuário principal é o voluntário ou responsável pela organização das doações.
+O projeto relaciona-se à ODS 2 da ONU (Fome Zero e Agricultura Sustentável) pela organização das doações de alimentos. O registro de produtos de higiene complementa a ação social. O objetivo é facilitar o acompanhamento dos alimentos arrecadados e de sua destinação às instituições.
 
-A proposta se relaciona à ODS 2 — Fome Zero e Agricultura Sustentável — pela organização da arrecadação e destinação de alimentos. Produtos de higiene complementam a ação social. O sistema apoia a organização; não se afirma que, por si só, elimina a insegurança alimentar.
+Concepção e jornada do usuário
+A proposta considera um cenário de organização de doações por voluntários. A jornada do usuário é: registrar a doação, incluir os itens, consultar os registros e atualizar a situação para ENTREGUE. Os dados permanecem no banco local após fechar o aplicativo.
 
-Objetivo: permitir que um operador registre, consulte, atualize e exclua doações, acompanhe recebimentos e entregas e preserve essas informações em banco de dados local.
+## 2. LISTA DE REQUISITOS FUNCIONAIS (ESCOPO)
 
-## 2. Escopo e requisitos
+- RF01 - Cadastrar uma doação com doador ou grupo, instituição destinatária e situação RECEBIDA.
 
-RF01 — O sistema deve permitir cadastrar uma doação com identificação do doador ou grupo, instituição destinatária e situação inicial RECEBIDA.
+- RF02 - Incluir um ou mais itens com tipo, descrição, quantidade inteira positiva e unidade; para alimentos, registrar também a validade.
 
-RF02 — O sistema deve permitir incluir um ou mais itens em cada doação, informando tipo (alimento ou higiene), descrição, quantidade inteira positiva e unidade. Para alimentos, deve registrar a validade.
+- RF03 - Listar as doações e consultar os dados e itens de uma doação selecionada.
 
-RF03 — O sistema deve listar as doações e permitir consultar os dados e todos os itens de uma doação selecionada.
+- RF04 - Alterar doador, instituição, situação e os itens de uma doação existente.
 
-RF04 — O sistema deve permitir alterar doador, instituição, situação e os itens de uma doação existente.
+- RF05 - Excluir uma doação após confirmação, removendo também seus itens.
 
-RF05 — O sistema deve permitir excluir uma doação após confirmação, removendo também seus itens.
+- RF06 - Registrar e exibir as situações RECEBIDA e ENTREGUE.
 
-RF06 — O sistema deve permitir registrar a situação RECEBIDA ou ENTREGUE e exibi-la na listagem.
+- RF07 - Exibir o total de doações e a contagem por situação.
 
-RF07 — O sistema deve apresentar a contagem total de doações e os totais por situação.
+## 3. O PLANEJAMENTO ÁGIL (BACKLOG)
 
-Regras: toda doação deve conter ao menos um item. Os campos obrigatórios não podem estar vazios. Cada item pertence exclusivamente a uma doação. Não há somatório de quantidades com unidades diferentes. Alimentos exigem data válida no formato AAAA-MM-DD; a conferência de vencimento e aptidão é manual.
+O desenvolvimento está organizado em quatro etapas, seguindo a dependência entre modelagem, implementação e validação. O backlog prioriza o cadastro, a consulta, a edição e a exclusão de doações, seguidos pelo acompanhamento das entregas.
 
-Fora do escopo: login, beneficiários individuais, estoque, sincronização entre computadores, emissão de comprovantes e relatórios exportados. Doador e instituição são campos textuais, sem cadastro independente.
+| Etapa | Épico | User Story / Atividades |
+| --- | --- | --- |
+| Etapa 1 | Concepção e modelo | COMO UM voluntário EU QUERO um registro organizado PARA QUE eu possa acompanhar as doações. Validar requisitos, UML, DER e script SQL. |
+| Etapa 2 | Cadastro e consulta | COMO UM voluntário EU QUERO cadastrar e consultar doações com seus itens PARA QUE eu mantenha um histórico local. Implementar domínio, validações e persistência. |
+| Etapa 3 | Gestão e interface | COMO UM voluntário EU QUERO editar, excluir e atualizar a situação das doações PARA QUE os registros reflitam as entregas. Integrar telas e resumo por situação. |
+| Etapa 4 | Validação e entrega | COMO UM avaliador EU QUERO executar o sistema com instruções claras PARA QUE eu verifique as funcionalidades. Testar, corrigir e revisar o README. |
 
-Requisitos não funcionais: uso local com interface gráfica; persistência em SQLite; integridade por chave estrangeira e transações; mensagens de validação; Java 17 ou superior; instruções de execução no README.
+## 4. JUSTIFICATIVA TÉCNICA E ARQUITETURAL
 
-## 3. Planejamento e viabilidade
+A solução utiliza Java 17, com tipagem estática e suporte aos pilares de Orientação a Objetos. O domínio emprega encapsulamento, composição, classe abstrata, herança e polimorfismo. As classes estão aninhadas em App.java para simplificar a compilação, com responsabilidades de domínio, persistência e interface separadas conceitualmente.
 
-Cronograma proposto para oito semanas do 2º bimestre. As datas abaixo são campos a preencher após consultar o calendário oficial. Os responsáveis A, B e C devem ser substituídos pelos integrantes reais; em dupla, redistribuir as atividades.
+O banco SQLite, acessado por JDBC, mantém os dados em disco sem servidor externo. Chaves estrangeiras, exclusão em cascata e transações preservam a consistência entre doação e itens. O cadastro e a edição usam SQL preparado e rollback em caso de falha.
 
-Semana 1 | Datas: __/__/__ a __/__/__ | Validar problema, escopo e critérios de aceitação | A + equipe.
+A interface Java Swing oferece listagem, formulário de itens, mensagens de validação e confirmação de exclusão. A situação aparece em texto. O uso é local, por um operador, sem login ou sincronização. As ações de consulta e edição partem da seleção de uma doação na tabela principal.
 
-Semana 2 | Datas: __/__/__ a __/__/__ | Revisar UML, DER e script do banco | B.
+Viabilidade e critérios de conclusão: a execução local dispensa hospedagem e servidor de banco dedicado. Cada etapa deve manter coerência entre requisitos, classes e tabelas. O núcleo funcional é composto por RF01–RF05; RF06–RF07 complementam o acompanhamento. A conclusão de uma funcionalidade exige operação persistida e instruções de uso atualizadas.
 
-Semana 3 | Datas: __/__/__ a __/__/__ | Implementar classes e validações | A.
+## 5. ESTRUTURAÇÃO DO GITHUB E DIAGRAMAS
 
-Semana 4 | Datas: __/__/__ a __/__/__ | Implementar cadastro e consulta no banco | B.
+5.1 Link do Repositório
 
-Semana 5 | Datas: __/__/__ a __/__/__ | Implementar edição, exclusão e transações | B + A.
+- Repositório Público GitHub: https://github.com/Jppjorgensen/-AEP-DoaAcao.
 
-Semana 6 | Datas: __/__/__ a __/__/__ | Implementar telas e navegação | C.
+Pastas: /src, /docs, /database e /lib. O README e os scripts da raiz orientam a compilação e a execução.
 
-Semana 7 | Datas: __/__/__ a __/__/__ | Integrar, testar CRUD e persistência | Todos.
+5.2 Diagrama de Classes (UML)
 
-Semana 8 | Datas: __/__/__ a __/__/__ | Corrigir, documentar e preparar apresentação | Todos.
+- Herança: Alimento e Higiene derivam da classe abstrata ItemDoacao, que reúne descrição, quantidade e unidade.
 
-Backlog: priorizar RF01–RF05 para obter o núcleo funcional; depois RF06–RF07. Critério de conclusão: funcionalidade executável, persistência verificada e instruções atualizadas. Usar tarefas A fazer, Em andamento e Concluído no controle da equipe.
+- Composição 1:N: cada Doacao contém ao menos um ItemDoacao. O item pertence a uma única doação e é removido com ela. O losango preenchido representa essa composição.
 
-Viabilidade: aplicação local com bibliotecas disponíveis sem cobrança de licença para este uso e sem servidor contratado. Estimativa inicial de esforço: 36 a 48 horas de equipe, sujeita à experiência dos integrantes.
+- Polimorfismo: os subtipos sobrescrevem resumo() com @Override. A confirmação de salvamento chama o método por uma referência ItemDoacao: alimentos exibem validade; itens de higiene exibem orientação de conferência da embalagem.
 
-Riscos e respostas: dificuldade com JDBC — integrar banco cedo; divergência entre código e diagramas — revisar semanalmente; perda de dados — copiar o banco com o programa fechado; atraso — preservar o CRUD antes de ampliar o escopo. Mudanças devem ser justificadas no README.
+- Responsabilidades: DoacaoRepository cuida do acesso ao banco; App coordena as telas. Triângulos indicam herança e setas tracejadas indicam dependências de uso.
 
-## 4. Justificativa técnica e interface
+5.3 Diagrama de Banco de Dados (DER)
 
-Java foi escolhido pela tipagem estática, suporte direto à orientação a objetos e disponibilidade de bibliotecas padrão para interface desktop e conexão com banco. A versão de referência é Java 17.
+- Tabela doacoes: armazena a identificação do doador ou grupo, a instituição destinatária e a situação RECEBIDA ou ENTREGUE.
 
-SQLite é um banco relacional real, acessado por JDBC. Permite persistir as informações em disco sem configurar um servidor externo, reduzindo a preparação do ambiente acadêmico. Um arquivo SQLite é um banco de dados, não um arquivo de texto usado para simular persistência.
+- Tabela itens_doacao: registra os itens e a chave estrangeira doacao_id. O campo tipo distingue ALIMENTO e HIGIENE. A herança do domínio é representada em uma única tabela de itens.
 
-As relações entre doação e itens são representadas por chave estrangeira. A aplicação ativa a verificação dessa chave em cada conexão. A exclusão em cascata e as transações preservam a consistência dos registros.
+- Integridade: cada item pertence a exatamente uma doação. Quantidade deve ser inteira e positiva. Validade é obrigatória para alimentos e nula para higiene. A aplicação exige ao menos um item e salva o conjunto em uma transação.
 
-A interface usa Java Swing. A tela principal reúne listagem, situação e ações; o formulário identifica os campos e permite adicionar ou remover itens. Erros são exibidos em mensagens e exclusões exigem confirmação. O status aparece em texto, sem depender apenas de cores.
+5.4 Escopo e validação
 
-Jornada: abrir o programa → escolher Nova doação → informar origem e destino → incluir itens → salvar → consultar → atualizar para ENTREGUE. Antes da apresentação, a equipe deve testar a jornada em um computador com ambiente gráfico.
+Não há cadastros independentes de doadores ou instituições, estoque, beneficiários, relatórios exportados ou registro das datas de recebimento e entrega. A conferência de vencimento e aptidão para doação é manual. Não se somam quantidades com unidades diferentes.
 
-Para ADS, essa solução contempla a interface navegável e explicita o planejamento e a usabilidade. Para Engenharia de Software, as mesmas telas podem ser mantidas, com foco avaliativo em requisitos, arquitetura e orientação a objetos.
+Testes automatizados: cadastro, consulta, atualização, exclusão em cascata, persistência após reconexão, polimorfismo e rejeição de entradas inválidas. O comando App --test executa as verificações em um banco temporário separado. A cobertura automatizada não inclui a interação com as telas.
 
-A implementação separa conceitualmente domínio, persistência e interface. As classes estão aninhadas em App.java para simplificar a compilação; os atributos do domínio são privados e acessados por métodos. Uma evolução possível é separar essas classes em arquivos próprios.
+Ambiente e dados: a execução requer Java 17 ou superior e interface gráfica. O banco é criado automaticamente em data/doaacao.db. A cópia de segurança deve ser realizada com o programa fechado.
 
-Não são exigidos dados sensíveis: o doador pode ser identificado pelo nome do grupo. A aplicação é local, sem login e sem sincronização; por isso, foi delimitada ao uso por um operador.
+Referências: Guia Extraoficial da AEP — 4º semestre, 2026.2; Projeto Chamada Smart — Documento de Arquitetura e Requisitos, utilizado como referência de estrutura.
 
-## 5. Modelagem de classes (UML)
-
-ItemDoacao é abstrata. Alimento e Higiene herdam seus atributos e implementam getTipo(), getValidade() e resumo() com @Override. Ao salvar, a interface chama resumo() por uma referência do tipo ItemDoacao; o resultado depende do subtipo concreto.
-
-Doacao possui de um a vários itens. O item não é compartilhado com outra doação e sua vida no banco termina quando a doação é excluída. Essa relação expressa composição 1:N.
-
-DoacaoRepository salva, lista e exclui agregados Doacao; App coordena a interface e utiliza o repositório. Os nomes mostrados no diagrama correspondem às classes do código.
-
-## 6. Modelo de dados (DER)
-
-A tabela doacoes armazena o cabeçalho de cada registro. A tabela itens_doacao armazena todos os itens e o discriminador tipo. A herança do domínio é persistida em uma única tabela de itens.
-
-Cardinalidade lógica: uma doação tem 1..N itens; cada item pertence a exatamente uma doação. A chave estrangeira garante que não exista item órfão; a exigência de ao menos um item é validada pelo domínio, dentro do fluxo transacional.
-
-Na tabela itens_doacao, validade é obrigatória para ALIMENTO e nula para HIGIENE. Quantidade é positiva; status aceita apenas RECEBIDA e ENTREGUE. A exclusão da doação remove seus itens via ON DELETE CASCADE.
-
-## 7. Entrega, rastreabilidade e validação
-
-Repositório público: https://github.com/Jppjorgensen/-AEP-DoaAcao.
-
-Estrutura: /src — código Java; /database — schema.sql; /docs — PDF e documentação editável; /lib — dependências; README.md — execução e limites; scripts de compilação e execução.
-
-RF01–RF02: formulário de doação, classes de domínio e método salvar. RF03: método listar e seleção na interface. RF04: edição com substituição transacional dos itens. RF05: excluir com confirmação e cascata. RF06: campo status. RF07: contadores na tela principal.
-
-Validação realizada nesta preparação: compilação com nível Java 17; teste automatizado de cadastro com alimento e higiene, leitura após reconexão, atualização, exclusão em cascata, polimorfismo e rejeição de entradas inválidas. Os testes usam banco temporário separado.
-
-Limite da validação: a interface gráfica não foi executada visualmente no ambiente de preparação, que não possui servidor gráfico. A equipe precisa validar as telas e os scripts no computador em que apresentará o trabalho.
-
-Pendências antes de entregar: preencher identificação e RAs; confirmar curso e regras oficiais; definir datas e responsáveis; revisar e compreender o código; executar a interface; conferir o acesso público ao GitHub e o link neste PDF.
-
-Os commits devem refletir a participação efetiva dos integrantes. Não foram inventados histórico colaborativo, entrevistas, pesquisa de campo ou resultados de uso por instituições.
-
-Base documental: Guia_Extraoficial_AEP_4Semestre_2026.pdf, fornecido pelo solicitante; Exemplo_AEP_ChamadaSmart.pdf, utilizado somente como referência de estrutura. O tema e a implementação deste pacote são distintos do exemplo.
-
-Os diagramas completos estão no PDF; ao alterar o modelo, atualizar ambos.
+Diagramas UML e DER: [PDF da AEP](AEP_DoaAcao_Planejamento.pdf).
